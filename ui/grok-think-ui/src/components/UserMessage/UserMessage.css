@@ -1,0 +1,14 @@
+.user-message-container {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+}
+
+.user-message {
+	font-family: "Comic Sans MS", sans-serif;  /* This is funny right */
+	color: #FCFCFC;
+	background-color: #2D3033;
+	border-radius: 15px 15px 0 15px;
+	padding: 10px;
+	max-width: 70%;
+}

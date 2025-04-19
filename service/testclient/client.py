@@ -1,4 +1,5 @@
 import requests
+import os
 
 API_URL = "http://localhost:3000/chat"
 headers = {
@@ -8,7 +9,8 @@ headers = {
 input_text = input("prompt: ")
 
 payload = {
-    "input": input_text
+    "input": input_text,    
+    "codeword": os.getenv("CODEWORD")
 }
 
 with requests.post(API_URL, json=payload, headers=headers, stream=True) as response:

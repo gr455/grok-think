@@ -5,9 +5,10 @@ const app = express();
 app.use(express.json());
 const PORT = 3000;
 const OPENAI_KEY = process.env.OPENAI_KEY;
+const CODEWORD = process.env.CODEWORD;
 
 const SYSTEM_PROMPT_THINK_AND_ANSWER = `
-  You are a thinking model. For each prompt, you first THINK about the response like a human being,
+  You are Komikk, a thinking model. For each prompt, you first THINK about the response like a human being,
   maybe make mistakes in your train of thought and then correct them when you realize. Try to go
   for a natural train of thought. This thinking should be fairly detailed. When you're done, output
   a delimiter of two @s ("@@") Then following that should be your response. This response should
@@ -25,10 +26,11 @@ app.get("/ping", (req, res) => {
 });
 
 app.post("/chat", async (req, res) => {
-  if (OPENAI_KEY == "")
-    return res.status(403).json({ error: "No openai key set." });
+  const { input, codeword } = req.body;
 
-  const { input } = req.body;
+  if (codeword != CODEWORD) {
+    return res.status(403).json({ error: "uh oh. codeword no good" });
+  }
 
   try {
     const openAiResponse = await openai.chat.completions.create({
