@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import './PromptBox.css'
 
-const PromptBox = ({handleSend}) => {
+const PromptBox = ({handleSend, canSend}) => {
 	const [prompt, setPrompt] = useState("")
 
 	const handleEnter = (e) => {
+		if (!canSend) return;
 		if (e.key === "Enter" && prompt.trim() !== "") {
 			handleSend(prompt.trim());
 			setPrompt("");
@@ -27,10 +28,11 @@ const PromptBox = ({handleSend}) => {
 			<input type="text" className="promptbox-input" value={prompt} onChange={handleChange} onKeyDown={handleEnter} placeholder="How can Komik help?"></input>
 			<div className="promptbox-buttongroup">
 				<div className="promptbox-leftside-buttons">
-					<button className="promptbox-button-thinkmode" disabled="true">Think Mode On</button>
+					<button className="promptbox-button-thinkmode" disabled={true}>Think Mode <b>On</b></button>
 				</div>
 				<div className="promptbox-rightside-buttons">
-					<button className="promptbox-button-send" disabled={prompt === ""} onClick={handleClick}>↑</button>
+					<button className="promptbox-button-modelname">GPT-4o mini</button>
+					<button className="promptbox-button-send" disabled={prompt.trim() === "" || !canSend} onClick={handleClick}>↑</button>
 				</div>
 			</div>
 		</div>

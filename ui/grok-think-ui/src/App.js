@@ -1,12 +1,14 @@
 import logo from './logo.svg';
 import './App.css';
-import PromptBox from './components/PromptBox/PromptBox.js'
 
-const handleSend = (sn) => {}
+import ChatArea from './components/ChatArea/ChatArea.js'
+
 
 function App() {
   return (
-    <PromptBox handleSend={handleSend}/>
+    <div className="container">
+      <ChatArea className="chat-area"/>
+    </div>
   );
 }
 

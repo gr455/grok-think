@@ -1,0 +1,75 @@
+.promptbox-container {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  background-color: #303030;
+  border-radius: 20px;
+}
+
+.promptbox-input {
+  width: auto;
+  padding: 14px 16px;
+  border: 0px;
+  outline: none;
+  background-color: #303030;
+  color: #FCFCFC;
+}
+
+.promptbox-input::placeholder {
+  color: #AAA;
+}
+
+.promptbox-buttongroup {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.promptbox-leftside-buttons {
+  display: flex;
+  align-items: center;
+}
+
+.promptbox-rightside-buttons {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.promptbox-button-thinkmode {
+  padding: 8px 12px;
+  background-color: #414447;
+  border: 0.5px solid #FCFCFC;
+  color: #FCFCFC;
+  border-radius: 999px;
+  cursor: default;
+  font-weight: 700;
+}
+
+.promptbox-button-modelname {
+  background-color: #303030;
+  border: none;
+  color: #FCFCFC;
+  font-weight: 500;
+}
+
+.promptbox-button-send {
+  background-color: #FCFCFC;
+  color: #1B1B1E;
+  border: none;
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease
+}
+
+
+.promptbox-button-send:disabled {
+  background-color: #48494C;
+  color: #BFBFBF;
+  cursor: default;
+}

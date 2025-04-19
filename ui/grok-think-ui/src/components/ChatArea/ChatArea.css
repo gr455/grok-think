@@ -1,0 +1,16 @@
+.chat-area-container {
+	display: flex;
+	flex-direction: column;
+	width: auto;
+	height: 100%;
+}
+
+.chat-area-messages {
+	height: 100%;
+}
+.chat-area-foot {
+	color: #AAA;
+	font-size: 12px;
+	font-weight: ;
+	margin: 5px auto;
+}
