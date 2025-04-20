@@ -15,7 +15,9 @@ const ThinkBox = ({thought, thoughtFor, state}) => {
 	const [expanded, setExpanded] = useState(false);
 	const [thoughtContainerHeight, setThoughtContainerHeight] = useState(0);
 	const [thoughtHeight, setThoughtHeight] = useState(0);
+	const [showOngoingThought, setShowOngoingThought] = useState(state === STATE_THINKING_STARTED && !expanded)
 	const thoughtBoxRef = useRef(null);
+	const ongoingThoughtBoxRef = useRef(null);
 
 	const handleContainerResize = () => {
 		if (expanded && thoughtBoxRef.current) {
@@ -31,11 +33,13 @@ const ThinkBox = ({thought, thoughtFor, state}) => {
 		setExpanded(prev => !prev)
 	}
 
-	if (state === STATE_THINKING_STARTED) {
-
-	}
-
 	useResizeObserver(thoughtBoxRef.current, handleContainerResize, expanded);
+
+	useEffect(() => {
+		console.log(state);
+		if (state === STATE_THINKING_STARTED && !expanded) setShowOngoingThought(true);
+		else setShowOngoingThought(false);
+	}, [expanded, state])
 
 	return (
 		<div className="thinkbox-container">
@@ -47,8 +51,10 @@ const ThinkBox = ({thought, thoughtFor, state}) => {
 				<div className="thinkbox-box-midrow" onClick={handleThinkBoxClick}>
 					<div className="thinkbox-expand-collapse-text">{expanded ? "Collapse details" : "Expand details"}</div>
 				</div>
+				<div className="thinkbox-thought-ongoing-container" ref={ongoingThoughtBoxRef} style={{display: `${showOngoingThought ? "inline-block" : "none"}`}}>
+					<div className="thinkbox-thought-ongoing">{thought}</div>
+				</div>
 				<div className="thinkbox-box-thought-container" style={{maxHeight: `${thoughtContainerHeight}px`}}>
-					<div className="thinkbox-thought-ongoing-box">{thought}</div>
 					<div className="thinkbox-thought" ref={thoughtBoxRef}>{thought}</div>
 				</div>
 			</div>

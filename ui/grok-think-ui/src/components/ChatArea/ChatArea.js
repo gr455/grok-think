@@ -146,6 +146,7 @@ const ChatArea = () => {
 						currentSystemResponse.message,
 						lastRequestThinkingSeconds,
 						currentSystemResponse.error,
+						responseState
 					) }
 				</div>
 			</div>

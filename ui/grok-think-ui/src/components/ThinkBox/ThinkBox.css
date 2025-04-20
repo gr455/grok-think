@@ -55,3 +55,44 @@
 	overflow: hidden;
 	transition: all 0.3s ease-in-out;
 }
+
+.thinkbox-thought-ongoing {
+	height: 150px;
+	overflow: scroll;
+}
+
+.thinkbox-thought-ongoing::-webkit-scrollbar {
+	display: none;
+}
+
+.thinkbox-thought-ongoing-container {
+	position: relative;
+
+}
+
+.thinkbox-thought-ongoing-container::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	height: 30px;
+
+}
+
+.thinkbox-thought-ongoing-container::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	height: 30px;
+}
+
+.thinkbox-thought-ongoing-container::before {
+	top: 0;
+	background: linear-gradient(to bottom, #1F2123, rgba(0, 0, 0, 0));
+}
+
+.thinkbox-thought-ongoing-container::after {
+	bottom: 0;
+	background: linear-gradient(to top, #1F2123, rgba(0, 0, 0, 0));
+}
