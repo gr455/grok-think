@@ -11,3 +11,8 @@
 	padding: 15px 15px;
 	max-width: 90%;
 }
+
+.system-message-errorbox {
+	color: red;
+	padding: 15px 15px;
+}

@@ -6,22 +6,31 @@ import SystemMessage from '../SystemMessage/SystemMessage.js'
 
 const KOMIK_SERVICE_ENDPOINT = "http://localhost:3000/chat"
 
+// Response state constants
+const STATE_USER_CREATED_REQUEST = 'STATE_USER_CREATED_REQUEST';
+const STATE_THINKING_STARTED = 'STATE_THINKING_STARTED';
+const STATE_RESPONSE_STARTED = 'STATE_RESPONSE_STARTED';
+const STATE_DONE = 'STATE_DONE';
+
 const ChatArea = () => {
 	const [messageHistory, setMessageHistory] = useState([]);
-	const [responseDone, setResponseDone] = useState(false);
-	const [currentSystemThought, setCurrentSystemThought] = useState("");
-	const [currentSystemMessage, setCurrentSystemMessage] = useState("");
-	const [currentSystemError, setCurrentSystemError] = useState("");
+	const [responseState, setResponseState] = useState(STATE_DONE);
+	const [currentSystemResponse, setCurrentSystemResponse] = useState({
+		thought: "",
+		message: "",
+		error: ""
+	});
 
 	const handleSend = (prompt) => {
 		const message = { role: "user", message: prompt }
 		setMessageHistory(prev => [...prev, message]);
-		setResponseDone(false);
+		setResponseState(STATE_USER_CREATED_REQUEST);
 	}
 
 	useEffect(() => {
 		const lastMessage = messageHistory[messageHistory.length - 1];
 		if (!lastMessage || lastMessage.role !== "user") return;
+		if (responseState !== STATE_USER_CREATED_REQUEST) return;
 
 		(async () => {
 			const params = new URLSearchParams(window.location.search);
@@ -34,6 +43,17 @@ const ChatArea = () => {
 					body: JSON.stringify({input: lastMessage.message, codeword: params.get('codeword')})
 				})
 
+				if (komikResponse.status == 401) {
+					setCurrentSystemResponse(prev => ({
+						...prev,
+						error: "Wrong codeword. Did you set query param 'codeword'?"
+					}));
+					setResponseState(STATE_DONE);
+				}
+				else if (komikResponse.status != 200) throw "Error ocurred"
+
+				setResponseState(STATE_THINKING_STARTED);
+				
 				const reader = komikResponse.body.getReader();
 				const decoder = new TextDecoder();
 				let buffer = "";
@@ -45,68 +65,93 @@ const ChatArea = () => {
 					buffer += decoder.decode(value, {stream: true});
 
 					const chunks = buffer.split("\n\n");
-					console.log(value)
 					buffer = chunks.pop(); // incomplete chunk stays in buffer
 
 					for (const chunk of chunks) {
 						const chunkData = JSON.parse(chunk.replace("data: ", ""));
 						if (chunkData.done) {
 							console.log("is done")
-							setResponseDone(true);
+							setResponseState(STATE_DONE);
 							break;
 						}
 
 						if (chunkData.error) {
-							setCurrentSystemError(chunkData.error);
-							setResponseDone(true);
+							setCurrentSystemResponse(prev => ({
+								...prev,
+								error: chunkData.error
+							}));
+							setResponseState(STATE_DONE);
 							break;
 						}
 
 						if (chunkData.thought) {
-							setCurrentSystemThought(prev => prev + chunkData.thought);
+							setResponseState(STATE_THINKING_STARTED)
+							setCurrentSystemResponse(prev => ({
+								...prev,
+								thought: prev.thought + chunkData.thought
+							}));
 						} else if (chunkData.response) {
-							setCurrentSystemMessage(prev => prev + chunkData.response);
+							setResponseState(STATE_RESPONSE_STARTED)
+							setCurrentSystemResponse(prev => ({
+								...prev,
+								message: prev.message + chunkData.response
+							}));
 						}
-
 					}
-
 				}
 
 			} catch (err) {
 				console.log(`ERROR: ${err}`);
-				setCurrentSystemError("Internal error ocurred");
+				setCurrentSystemResponse(prev => ({
+					...prev,
+					error: "Internal error ocurred"
+				}));
+				setResponseState(STATE_DONE);
 			}
-
-
 		})();
 	}, [messageHistory])
 
 	useEffect(() => {
-		if (responseDone) {
+		if (responseState === STATE_DONE) {
 			const thisMessage = {
 				role: "system",
-				thought: currentSystemThought,
-				message: currentSystemMessage,
-				error: currentSystemError
+				thought: currentSystemResponse.thought,
+				message: currentSystemResponse.message,
+				errorMessage: currentSystemResponse.error
 			}
 
 			setMessageHistory(prev => [...prev, thisMessage])
-			setCurrentSystemMessage("")
-			setCurrentSystemError("")
-			setCurrentSystemThought("")
+			setCurrentSystemResponse({
+				thought: "",
+				message: "",
+				error: ""
+			});
 		}
-	},[responseDone])
+	}, [responseState])
 
 	return (
 		<div className="chat-area-container">
 			<div className="chat-area-messages">
 				{ makeMessageHistory(messageHistory) }
-				{ makeCurrentSystemResponse(currentSystemThought, currentSystemMessage, currentSystemError) }
+				{ makeProcessingDots(responseState === STATE_USER_CREATED_REQUEST || responseState === STATE_THINKING_STARTED) }
+				{ makeCurrentSystemResponse(
+					currentSystemResponse.thought, 
+					currentSystemResponse.message, 
+					currentSystemResponse.error
+				) }
 			</div>
-			<PromptBox handleSend={handleSend} canSend={responseDone || messageHistory.length == 0}/>
-			<div className="chat-area-foot">Komik can make mistakes. But they will be funny</div>
+			<PromptBox handleSend={handleSend} canSend={responseState === STATE_DONE}/>
+			<div className="chat-area-foot">Komik never makes mistakes. It changes reality to match its answers</div>
 		</div>
-		)
+	)
+}
+
+const makeProcessingDots = (show) => {
+	if (!show) return null;
+	return (
+		<div className="chat-area-processing-dot">
+		</div>
+	)
 }
 
 const makeMessageHistory = (history) => {
@@ -114,7 +159,7 @@ const makeMessageHistory = (history) => {
 		if (historyItem.role === "user") {
 			return <UserMessage key={idx} message={historyItem.message}/>
 		} else if (historyItem.role === "system") {
-			return <SystemMessage key={idx} thought={historyItem.thought} message={historyItem.message} thoughtFor={historyItem.thoughtFor} err={historyItem.errorMessage}/>
+			return <SystemMessage key={idx} thought={historyItem.thought} message={historyItem.message} thoughtFor={historyItem.thoughtFor} error={historyItem.errorMessage}/>
 		} else {}
 	})
 }
@@ -123,7 +168,5 @@ const makeCurrentSystemResponse = (thought, message, error) => {
 	if (!thought && !message && !error) return null;
 	return <SystemMessage key="new" thought={thought} message={message} thoughtFor={0} err={error}/>
 }
-
-
 
 export default ChatArea;
