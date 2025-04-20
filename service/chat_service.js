@@ -74,7 +74,7 @@ app.post("/chat", async (req, res) => {
       }
     }
 
-    res.write(`data: {"done": true}`);
+    res.write(`data: {"done": true}\n\n`);
     res.end();
   } catch (err) {
     console.log(`ERROR: could not request openai: ${err}`);

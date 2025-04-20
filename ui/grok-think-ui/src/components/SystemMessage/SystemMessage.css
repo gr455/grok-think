@@ -1,0 +1,13 @@
+.system-message-container {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	margin: 20px;
+}
+
+.system-message {
+/*	font-family: "Comic Sans MS", sans-serif;*/
+	color: #FCFCFC;
+	padding: 15px 15px;
+	max-width: 90%;
+}

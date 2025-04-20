@@ -8,7 +8,7 @@ const KOMIK_SERVICE_ENDPOINT = "http://localhost:3000/chat"
 
 const ChatArea = () => {
 	const [messageHistory, setMessageHistory] = useState([]);
-	const [canSend, setCanSend] = useState(true);
+	const [responseDone, setResponseDone] = useState(false);
 	const [currentSystemThought, setCurrentSystemThought] = useState("");
 	const [currentSystemMessage, setCurrentSystemMessage] = useState("");
 	const [currentSystemError, setCurrentSystemError] = useState("");
@@ -16,7 +16,7 @@ const ChatArea = () => {
 	const handleSend = (prompt) => {
 		const message = { role: "user", message: prompt }
 		setMessageHistory(prev => [...prev, message]);
-		// setCanSend(false);
+		setResponseDone(false);
 	}
 
 	useEffect(() => {
@@ -40,7 +40,7 @@ const ChatArea = () => {
 
 				while (true) {
 					const { value, done } = await reader.read();
-					if (done) { console.log("BIG BOI DONE"); break};
+					if (done) break;
 
 					buffer += decoder.decode(value, {stream: true});
 
@@ -49,43 +49,22 @@ const ChatArea = () => {
 					buffer = chunks.pop(); // incomplete chunk stays in buffer
 
 					for (const chunk of chunks) {
-						console.log("Chunky chunk")
 						const chunkData = JSON.parse(chunk.replace("data: ", ""));
 						if (chunkData.done) {
-							console.log("is done");
-							const thisMessage = {
-								role: "system",
-								thought: currentSystemThought,
-								message: currentSystemMessage,
-								thoughtFor: 0
-							}
-
-							setMessageHistory(prev => [...prev, thisMessage])
-							setCurrentSystemError("");
-							setCurrentSystemMessage("");
-							setCurrentSystemThought("");
+							console.log("is done")
+							setResponseDone(true);
 							break;
 						}
 
 						if (chunkData.error) {
-							console.log("is error");
-							const thisMessage = {
-								role: "system",
-								errorMessage: chunkData.error
-							}
-
-							setMessageHistory(prev => [...prev, thisMessage])
-							setCurrentSystemError("");
-							setCurrentSystemMessage("");
-							setCurrentSystemThought("");
+							setCurrentSystemError(chunkData.error);
+							setResponseDone(true);
 							break;
 						}
 
 						if (chunkData.thought) {
-							console.log("is thought");
 							setCurrentSystemThought(prev => prev + chunkData.thought);
 						} else if (chunkData.response) {
-							console.log("is message");
 							setCurrentSystemMessage(prev => prev + chunkData.response);
 						}
 
@@ -95,22 +74,28 @@ const ChatArea = () => {
 
 			} catch (err) {
 				console.log(`ERROR: ${err}`);
-				const thisMessage = {
-					role: "system",
-					errorMessage: err
-				}
-
-				setMessageHistory(prev => [...prev, thisMessage])
-				setCurrentSystemError("");
-				setCurrentSystemMessage("");
-				setCurrentSystemThought("");
+				setCurrentSystemError("Internal error ocurred");
 			}
 
 
 		})();
-
-
 	}, [messageHistory])
+
+	useEffect(() => {
+		if (responseDone) {
+			const thisMessage = {
+				role: "system",
+				thought: currentSystemThought,
+				message: currentSystemMessage,
+				error: currentSystemError
+			}
+
+			setMessageHistory(prev => [...prev, thisMessage])
+			setCurrentSystemMessage("")
+			setCurrentSystemError("")
+			setCurrentSystemThought("")
+		}
+	},[responseDone])
 
 	return (
 		<div className="chat-area-container">
@@ -118,7 +103,7 @@ const ChatArea = () => {
 				{ makeMessageHistory(messageHistory) }
 				{ makeCurrentSystemResponse(currentSystemThought, currentSystemMessage, currentSystemError) }
 			</div>
-			<PromptBox handleSend={handleSend} canSend={canSend}/>
+			<PromptBox handleSend={handleSend} canSend={responseDone || messageHistory.length == 0}/>
 			<div className="chat-area-foot">Komik can make mistakes. But they will be funny</div>
 		</div>
 		)
@@ -136,7 +121,7 @@ const makeMessageHistory = (history) => {
 
 const makeCurrentSystemResponse = (thought, message, error) => {
 	if (!thought && !message && !error) return null;
-	return <UserMessage key="new" message={thought + "\n---\n" + message + "\n---\n" + error} />
+	return <SystemMessage key="new" thought={thought} message={message} thoughtFor={0} err={error}/>
 }
 
 
