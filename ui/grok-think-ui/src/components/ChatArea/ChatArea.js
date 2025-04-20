@@ -137,18 +137,23 @@ const ChatArea = () => {
 
 	return (
 		<div className="chat-area-container">
-			<div className="chat-area-messages">
-				{ makeMessageHistory(messageHistory) }
-				{ makeProcessingDots(responseState === STATE_USER_CREATED_REQUEST || responseState === STATE_THINKING_STARTED) }
-				{ makeCurrentSystemResponse(
-					currentSystemResponse.thought, 
-					currentSystemResponse.message,
-					lastRequestThinkingSeconds,
-					currentSystemResponse.error
-				) }
+			<div className="chat-area-messages-wrapper">
+				<div className="chat-area-messages">
+					{ makeMessageHistory(messageHistory, responseState) }
+					{ makeProcessingDots(responseState === STATE_USER_CREATED_REQUEST || responseState === STATE_THINKING_STARTED) }
+					{ makeCurrentSystemResponse(
+						currentSystemResponse.thought, 
+						currentSystemResponse.message,
+						lastRequestThinkingSeconds,
+						currentSystemResponse.error,
+					) }
+				</div>
 			</div>
-			<PromptBox handleSend={handleSend} canSend={responseState === STATE_IDLE}/>
-			<div className="chat-area-foot">Komik never makes mistakes. It changes reality to match its answers</div>
+
+			<div className="chat-area-bottom-wrapper">
+				<PromptBox handleSend={handleSend} canSend={responseState === STATE_IDLE}/>
+				<div className="chat-area-foot">Komik never makes mistakes. It changes reality to match its answers</div>
+			</div>
 		</div>
 	)
 }
@@ -166,14 +171,14 @@ const makeMessageHistory = (history) => {
 		if (historyItem.role === "user") {
 			return <UserMessage key={idx} message={historyItem.message}/>
 		} else if (historyItem.role === "system") {
-			return <SystemMessage key={idx} thought={historyItem.thought} message={historyItem.message} thoughtFor={historyItem.thoughtFor} error={historyItem.errorMessage}/>
+			return <SystemMessage key={idx} thought={historyItem.thought} message={historyItem.message} thoughtFor={historyItem.thoughtFor} error={historyItem.errorMessage} state={STATE_DONE} />
 		} else {}
 	})
 }
 
-const makeCurrentSystemResponse = (thought, message, thoughtFor, error) => {
+const makeCurrentSystemResponse = (thought, message, thoughtFor, error, state) => {
 	if (!thought && !message && !error) return null;
-	return <SystemMessage key="new" thought={thought} message={message} thoughtFor={thoughtFor} err={error}/>
+	return <SystemMessage key="new" thought={thought} message={message} thoughtFor={thoughtFor} err={error} state={state} />
 }
 
 export default ChatArea;

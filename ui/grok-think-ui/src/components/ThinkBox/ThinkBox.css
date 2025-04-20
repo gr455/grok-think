@@ -1,0 +1,57 @@
+.thinkbox-container {
+	width: 100%;
+}
+
+.thinkbox-box {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	border: 2px solid;
+	border-radius: 20px;
+	border-color: #323537;
+	padding: 15px 15px;
+	width: 100%;
+}
+
+.thought-seconds {
+	font-weight: 300;
+}
+
+.thinkbox-box-toprow {
+	display: flex;
+	justify-content: space-between;
+	cursor: pointer;
+}
+
+.thinkbox-box-midrow {
+	display: flex;
+	justify-content: space-between;
+	cursor: pointer;
+}
+
+.thinkbox-timer {
+	display: flex;
+	justify-content: flex-start;
+}
+
+.thinkbox-expand-collapse {
+	display: flex;
+	justify-content: flex-end;
+}
+
+.thinkbox-expand-collapse-text {
+	display: flex;
+	justify-content: flex-start;
+	font-size: 0.9rem;
+	color: #bfbfbf;
+	font-weight: 600;
+}
+
+.thinkbox-thought {
+	margin-top: 10px;
+}
+
+.thinkbox-box-thought-container {
+	overflow: hidden;
+	transition: all 0.3s ease-in-out;
+}

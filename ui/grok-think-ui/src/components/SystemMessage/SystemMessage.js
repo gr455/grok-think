@@ -1,7 +1,8 @@
 import React from 'react'
 import './SystemMessage.css'
+import ThinkBox from '../ThinkBox/ThinkBox.js'
 
-const SystemMessage = ({thought, message, thoughtFor, error}) => {
+const SystemMessage = ({thought, message, thoughtFor, error, state}) => {
 	if (error) {
 		return (
 			<div className="system-message-container">
@@ -14,8 +15,7 @@ const SystemMessage = ({thought, message, thoughtFor, error}) => {
 	return (
 		<div className="system-message-container">
 			<div className="system-message">
-				<div className="system-message-thinkbox">{thought}</div>
-				<div className="system-message-thoughtfor">thought for {thoughtFor}s</div>
+				<ThinkBox thought={thought} thoughtFor={thoughtFor} state={state} />
 				<div className="system-message-messagebox">{message}</div>
 			</div>
 		</div>
