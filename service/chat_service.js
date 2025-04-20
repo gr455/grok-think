@@ -45,14 +45,21 @@ app.post("/chat", async (req, res) => {
     res.setHeader("Content-Type", "text/event-stream");
     res.setHeader("Connection", "keep-alive");
 
+    let thinking = true;
     for await (const chunk of openAiResponse) {
       const content = chunk.choices?.[0]?.delta?.content || "";
       if (content) {
-        res.write(content);
+        if (content === "@@") {
+          thinking = false;
+          continue;
+        }
+        let contentJson = JSON.stringify({ thought: content });
+        if (!thinking) contentJson = JSON.stringify({ response: content });
+        res.write(`data: ${contentJson}\n\n`);
       }
     }
 
-    res.write("##");
+    res.write(`data: {"done": true}`);
     res.end();
   } catch (err) {
     console.log(`ERROR: could not request openai: ${err}`);
