@@ -38,6 +38,7 @@ const ChatArea = () => {
 		(async () => {
 			const params = new URLSearchParams(window.location.search);
 			try {
+				setResponseState(STATE_THINKING_STARTED)
 				const komikResponse = await fetch(KOMIK_SERVICE_ENDPOINT, {
 					method: "POST",
 					headers: {
@@ -89,7 +90,6 @@ const ChatArea = () => {
 						}
 
 						if (chunkData.thought) {
-							setResponseState(STATE_THINKING_STARTED)
 							setCurrentSystemResponse(prev => ({
 								...prev,
 								thought: prev.thought + chunkData.thought

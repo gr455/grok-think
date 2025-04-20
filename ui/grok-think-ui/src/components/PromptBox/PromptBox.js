@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import './PromptBox.css'
+import { FaArrowUp } from 'react-icons/fa';
 
 const PromptBox = ({handleSend, canSend}) => {
 	const [prompt, setPrompt] = useState("")
@@ -32,7 +33,7 @@ const PromptBox = ({handleSend, canSend}) => {
 				</div>
 				<div className="promptbox-rightside-buttons">
 					<button className="promptbox-button-modelname">GPT-4o mini</button>
-					<button className="promptbox-button-send" disabled={prompt.trim() === "" || !canSend} onClick={handleClick}>↑</button>
+					<button className="promptbox-button-send" disabled={prompt.trim() === "" || !canSend} onClick={handleClick}><FaArrowUp/></button>
 				</div>
 			</div>
 		</div>

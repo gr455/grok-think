@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import './ThinkBox.css'
+import { useResizeObserver } from '../../hooks/Resizer.js'
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 
 // Response state constants
@@ -12,18 +13,19 @@ const STATE_DONE = "STATE_DONE";
 
 const ThinkBox = ({thought, thoughtFor, state}) => {
 	const [expanded, setExpanded] = useState(false);
-	const [thoughtContainerHeight, setThoughtContainerHeight] = useState(0)
+	const [thoughtContainerHeight, setThoughtContainerHeight] = useState(0);
+	const [thoughtHeight, setThoughtHeight] = useState(0);
 	const thoughtBoxRef = useRef(null);
 
-	useEffect(() => {
-		if (expanded) {
+	const handleContainerResize = () => {
+		if (expanded && thoughtBoxRef.current) {
 			const computedStyle = window.getComputedStyle(thoughtBoxRef.current);
 			const totalMargins = parseFloat(computedStyle.marginTop) + parseFloat(computedStyle.marginBottom);
 			setThoughtContainerHeight(thoughtBoxRef.current.scrollHeight + totalMargins);
 		} else {
 			setThoughtContainerHeight(0);
 		}
-	}, [expanded])
+	}
 
 	const handleThinkBoxClick = (e) => {
 		setExpanded(prev => !prev)
@@ -32,6 +34,8 @@ const ThinkBox = ({thought, thoughtFor, state}) => {
 	if (state === STATE_THINKING_STARTED) {
 
 	}
+
+	useResizeObserver(thoughtBoxRef.current, handleContainerResize, expanded);
 
 	return (
 		<div className="thinkbox-container">
@@ -44,6 +48,7 @@ const ThinkBox = ({thought, thoughtFor, state}) => {
 					<div className="thinkbox-expand-collapse-text">{expanded ? "Collapse details" : "Expand details"}</div>
 				</div>
 				<div className="thinkbox-box-thought-container" style={{maxHeight: `${thoughtContainerHeight}px`}}>
+					<div className="thinkbox-thought-ongoing-box">{thought}</div>
 					<div className="thinkbox-thought" ref={thoughtBoxRef}>{thought}</div>
 				</div>
 			</div>

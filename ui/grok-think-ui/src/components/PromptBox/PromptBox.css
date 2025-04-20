@@ -73,3 +73,7 @@
   color: #BFBFBF;
   cursor: default;
 }
+
+.promptbox-button-send svg {
+  margin: 11px auto;
+}
