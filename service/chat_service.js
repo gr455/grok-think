@@ -8,7 +8,7 @@ const OPENAI_KEY = process.env.OPENAI_KEY;
 const CODEWORD = process.env.CODEWORD;
 
 const SYSTEM_PROMPT_THINK_AND_ANSWER = `
-  You are Komikk, a thinking model. For each prompt, you first THINK about the response like a human being,
+  You are Komik, a thinking model. For each prompt, you first THINK about the response like a human being,
   maybe make mistakes in your train of thought and then correct them when you realize. Try to go
   for a natural train of thought. This thinking should be fairly detailed. When you're done, output
   a delimiter of two @s ("@@") Then following that should be your response. This response should
@@ -21,12 +21,26 @@ const openai = new OpenAI({
   apiKey: OPENAI_KEY,
 });
 
+app.use((req, res, next) => {
+  // TODO: change this to whatever origin of the host.
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  if (req.method === "OPTIONS") {
+    return res.status(200).end(); // Preflight response ends here
+  }
+
+  next();
+});
+
 app.get("/ping", (req, res) => {
   res.send("pong");
 });
 
 app.post("/chat", async (req, res) => {
   const { input, codeword } = req.body;
+
+  console.log(`REQUEST: ${input}`);
 
   if (codeword != CODEWORD) {
     return res.status(401).json({ error: "uh oh. codeword no good" });
@@ -44,6 +58,7 @@ app.post("/chat", async (req, res) => {
 
     res.setHeader("Content-Type", "text/event-stream");
     res.setHeader("Connection", "keep-alive");
+    res.setHeader("Cache-Control", "no-cache");
 
     let thinking = true;
     for await (const chunk of openAiResponse) {
