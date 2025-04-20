@@ -7,8 +7,10 @@
 
 .chat-area-messages {
 	height: 100%;
-	overflow: scroll;
+	overflow-y: auto;
+	scroll-behavior: smooth;
 }
+
 .chat-area-foot {
 	color: #AAA;
 	font-size: 12px;

@@ -3,23 +3,26 @@ import './ChatArea.css'
 import PromptBox from '../PromptBox/PromptBox.js'
 import UserMessage from '../UserMessage/UserMessage.js'
 import SystemMessage from '../SystemMessage/SystemMessage.js'
+import { useTimer } from '../../hooks/Timer.js'
 
 const KOMIK_SERVICE_ENDPOINT = "http://localhost:3000/chat"
 
 // Response state constants
-const STATE_USER_CREATED_REQUEST = 'STATE_USER_CREATED_REQUEST';
-const STATE_THINKING_STARTED = 'STATE_THINKING_STARTED';
-const STATE_RESPONSE_STARTED = 'STATE_RESPONSE_STARTED';
-const STATE_DONE = 'STATE_DONE';
+const STATE_IDLE = "STATE_IDLE"
+const STATE_USER_CREATED_REQUEST = "STATE_USER_CREATED_REQUEST";
+const STATE_THINKING_STARTED = "STATE_THINKING_STARTED";
+const STATE_RESPONSE_STARTED = "STATE_RESPONSE_STARTED";
+const STATE_DONE = "STATE_DONE";
 
 const ChatArea = () => {
 	const [messageHistory, setMessageHistory] = useState([]);
-	const [responseState, setResponseState] = useState(STATE_DONE);
+	const [responseState, setResponseState] = useState(STATE_IDLE);
 	const [currentSystemResponse, setCurrentSystemResponse] = useState({
 		thought: "",
 		message: "",
 		error: ""
 	});
+	const lastRequestThinkingSeconds = useTimer(responseState);
 
 	const handleSend = (prompt) => {
 		const message = { role: "user", message: prompt }
@@ -49,6 +52,7 @@ const ChatArea = () => {
 						error: "Wrong codeword. Did you set query param 'codeword'?"
 					}));
 					setResponseState(STATE_DONE);
+					return
 				}
 				else if (komikResponse.status != 200) throw "Error ocurred"
 
@@ -116,6 +120,7 @@ const ChatArea = () => {
 			const thisMessage = {
 				role: "system",
 				thought: currentSystemResponse.thought,
+				thoughtFor: lastRequestThinkingSeconds,
 				message: currentSystemResponse.message,
 				errorMessage: currentSystemResponse.error
 			}
@@ -126,6 +131,7 @@ const ChatArea = () => {
 				message: "",
 				error: ""
 			});
+			setResponseState(STATE_IDLE)
 		}
 	}, [responseState])
 
@@ -136,11 +142,12 @@ const ChatArea = () => {
 				{ makeProcessingDots(responseState === STATE_USER_CREATED_REQUEST || responseState === STATE_THINKING_STARTED) }
 				{ makeCurrentSystemResponse(
 					currentSystemResponse.thought, 
-					currentSystemResponse.message, 
+					currentSystemResponse.message,
+					lastRequestThinkingSeconds,
 					currentSystemResponse.error
 				) }
 			</div>
-			<PromptBox handleSend={handleSend} canSend={responseState === STATE_DONE}/>
+			<PromptBox handleSend={handleSend} canSend={responseState === STATE_IDLE}/>
 			<div className="chat-area-foot">Komik never makes mistakes. It changes reality to match its answers</div>
 		</div>
 	)
@@ -164,9 +171,9 @@ const makeMessageHistory = (history) => {
 	})
 }
 
-const makeCurrentSystemResponse = (thought, message, error) => {
+const makeCurrentSystemResponse = (thought, message, thoughtFor, error) => {
 	if (!thought && !message && !error) return null;
-	return <SystemMessage key="new" thought={thought} message={message} thoughtFor={0} err={error}/>
+	return <SystemMessage key="new" thought={thought} message={message} thoughtFor={thoughtFor} err={error}/>
 }
 
 export default ChatArea;

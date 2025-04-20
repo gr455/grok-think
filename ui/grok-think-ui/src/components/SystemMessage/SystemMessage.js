@@ -15,6 +15,7 @@ const SystemMessage = ({thought, message, thoughtFor, error}) => {
 		<div className="system-message-container">
 			<div className="system-message">
 				<div className="system-message-thinkbox">{thought}</div>
+				<div className="system-message-thoughtfor">thought for {thoughtFor}s</div>
 				<div className="system-message-messagebox">{message}</div>
 			</div>
 		</div>
