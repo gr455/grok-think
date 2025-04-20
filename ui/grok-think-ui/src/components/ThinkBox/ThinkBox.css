@@ -67,7 +67,15 @@
 
 .thinkbox-thought-ongoing-container {
 	position: relative;
+	transition: opacity 1s ease-out
+}
 
+.thinkbox-thought-ongoing-container.invisible{
+	opacity: 0;
+}
+
+.thinkbox-thought-ongoing-container.visible{
+	opacity: 1;
 }
 
 .thinkbox-thought-ongoing-container::before {

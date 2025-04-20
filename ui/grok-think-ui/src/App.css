@@ -6,6 +6,15 @@
   justify-content: center;
 }
 
+.logo-full {
+  position: absolute;
+  left: 30px;
+  top: 30px;
+}
+.logo-full img{
+  height: 60px;
+}
+
 body {
   background-color: #1F2123;
 }

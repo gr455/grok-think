@@ -45,13 +45,13 @@ const ThinkBox = ({thought, thoughtFor, state}) => {
 		<div className="thinkbox-container">
 			<div className="thinkbox-box">
 				<div className="thinkbox-box-toprow" onClick={handleThinkBoxClick}>
-					<div className="thinkbox-timer"><span><b>Thought for</b> <span className="thought-seconds">{thoughtFor}s</span></span></div>
+					<div className="thinkbox-timer"><span><b>{state === STATE_THINKING_STARTED ? "Thinking" : "Thought"} for</b> <span className="thought-seconds">{thoughtFor}s</span></span></div>
 					{expanded ? <div className="thinkbox-expand-collapse"><FaChevronUp /></div> : <div className="thinkbox-expand-collapse"><FaChevronDown /></div>}
 				</div>
 				<div className="thinkbox-box-midrow" onClick={handleThinkBoxClick}>
 					<div className="thinkbox-expand-collapse-text">{expanded ? "Collapse details" : "Expand details"}</div>
 				</div>
-				<div className="thinkbox-thought-ongoing-container" ref={ongoingThoughtBoxRef} style={{display: `${showOngoingThought ? "inline-block" : "none"}`}}>
+				<div className={`thinkbox-thought-ongoing-container ${showOngoingThought ? "visible" : "invisible"}`} ref={ongoingThoughtBoxRef} style={{display: `${showOngoingThought ? "inline-block" : "none"}`}}>
 					<div className="thinkbox-thought-ongoing">{thought}</div>
 				</div>
 				<div className="thinkbox-box-thought-container" style={{maxHeight: `${thoughtContainerHeight}px`}}>
