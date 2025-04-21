@@ -6,6 +6,7 @@ const STATE_USER_CREATED_REQUEST = "STATE_USER_CREATED_REQUEST";
 const STATE_THINKING_STARTED = "STATE_THINKING_STARTED";
 const STATE_RESPONSE_STARTED = "STATE_RESPONSE_STARTED";
 const STATE_DONE = "STATE_DONE";
+const STATE_ABORTED = "STATE_ABORTED";
 
 
 const useTimer = (state) => {
@@ -13,7 +14,7 @@ const useTimer = (state) => {
 	const intervalRef = useRef(null);
 
 	const mustCreateNewTimer = state === STATE_USER_CREATED_REQUEST;
-	const mustStopTimer = state === STATE_RESPONSE_STARTED || state === STATE_DONE;
+	const mustStopTimer = state === STATE_RESPONSE_STARTED || state === STATE_DONE || state === STATE_ABORTED;
 
 	useEffect(() => {
 		if (mustCreateNewTimer) {

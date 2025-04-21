@@ -15,6 +15,7 @@ const STATE_USER_CREATED_REQUEST = "STATE_USER_CREATED_REQUEST";
 const STATE_THINKING_STARTED = "STATE_THINKING_STARTED";
 const STATE_RESPONSE_STARTED = "STATE_RESPONSE_STARTED";
 const STATE_DONE = "STATE_DONE";
+const STATE_ABORTED = "STATE_ABORTED";
 
 const ChatArea = () => {
 	const [messageHistory, setMessageHistory] = useState([]);
@@ -25,12 +26,17 @@ const ChatArea = () => {
 		error: ""
 	});
 	const chatAreaBottomRef = useRef(null);
+	const aborted = useRef(false);
 	const lastRequestThinkingSeconds = useTimer(responseState);
 
 	const handleSend = (prompt) => {
 		const message = { role: "user", message: prompt }
 		setMessageHistory(prev => [...prev, message]);
 		setResponseState(STATE_USER_CREATED_REQUEST);
+	}
+
+	const handleAbort = () => {
+		aborted.current= true;
 	}
 
 	useScrollTo(chatAreaBottomRef, responseState)
@@ -75,6 +81,12 @@ const ChatArea = () => {
 
 				setResponseState(STATE_THINKING_STARTED);
 				while (true) {
+					// handle abort
+					if (aborted.current) {
+						setResponseState(STATE_ABORTED);
+						return
+					}
+
 					const { value, done } = await reader.read();
 					if (done) break;
 
@@ -126,12 +138,13 @@ const ChatArea = () => {
 	}, [messageHistory])
 
 	useEffect(() => {
-		if (responseState === STATE_DONE) {
+		if (responseState === STATE_DONE || responseState === STATE_ABORTED) {
 			const thisMessage = {
 				role: "system",
 				thought: currentSystemResponse.thought,
 				thoughtFor: lastRequestThinkingSeconds,
 				message: currentSystemResponse.message,
+				aborted: responseState === STATE_ABORTED,
 				errorMessage: currentSystemResponse.error
 			}
 
@@ -141,6 +154,8 @@ const ChatArea = () => {
 				message: "",
 				error: ""
 			});
+
+			aborted.current = false;
 			setResponseState(STATE_IDLE)
 		}
 	}, [responseState]);
@@ -161,7 +176,7 @@ const ChatArea = () => {
 				<div className="chat-area-bottom-ref" ref={chatAreaBottomRef}></div>
 			</div>
 			<div className="chat-area-bottom-wrapper">
-				<PromptBox handleSend={handleSend} canSend={responseState === STATE_IDLE}/>
+				<PromptBox handleSend={handleSend} handleAbort={handleAbort} canSend={responseState === STATE_IDLE} canAbort={[STATE_THINKING_STARTED, STATE_RESPONSE_STARTED, STATE_USER_CREATED_REQUEST].includes(responseState)}/>
 				<div className="chat-area-foot">Komik never makes mistakes. <span id="funny">It changes reality to match its answers</span></div>
 			</div>
 		</div>
@@ -173,7 +188,7 @@ const makeMessageHistory = (history) => {
 		if (historyItem.role === "user") {
 			return <UserMessage key={idx} message={historyItem.message}/>
 		} else if (historyItem.role === "system") {
-			return <SystemMessage key={idx} thought={historyItem.thought} message={historyItem.message} thoughtFor={historyItem.thoughtFor} error={historyItem.errorMessage} state={STATE_DONE} />
+			return <SystemMessage key={idx} thought={historyItem.thought} message={historyItem.message} thoughtFor={historyItem.thoughtFor} error={historyItem.errorMessage} aborted={historyItem.aborted} state={STATE_DONE} />
 		} else {}
 	})
 }

@@ -76,6 +76,20 @@
   text-align: center;
 }
 
+.promptbox-button-abort {
+  background-color: #FCFCFC;
+  color: #1B1B1E;
+  border: none;
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  text-align: center;
+}
+
 
 .promptbox-button-send:disabled {
   background-color: #48494C;
@@ -84,5 +98,9 @@
 }
 
 .promptbox-button-send svg {
+  margin: 11px auto;
+}
+
+.promptbox-button-abort svg {
   margin: 11px auto;
 }

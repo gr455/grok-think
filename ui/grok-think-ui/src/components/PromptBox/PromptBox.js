@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import './PromptBox.css'
-import { FaArrowUp } from 'react-icons/fa';
+import { FaArrowUp, FaSquare } from 'react-icons/fa';
 import { HiLightBulb } from 'react-icons/hi';
 
-const PromptBox = ({handleSend, canSend}) => {
+const PromptBox = ({handleSend, canSend, handleAbort, canAbort}) => {
 	const [prompt, setPrompt] = useState("")
 
 	const handleEnter = (e) => {
@@ -15,11 +15,15 @@ const PromptBox = ({handleSend, canSend}) => {
 		}
 	}
 
-	const handleClick = (e) => {
+	const handleSendClick = (e) => {
 		if (prompt.trim() !== "") {
 			handleSend(prompt.trim());
 			setPrompt("");
 		}
+	}
+
+	const handleAbortClick = (e) => {
+		handleAbort();
 	}
 
 	const handleChange = (e) => {
@@ -35,7 +39,8 @@ const PromptBox = ({handleSend, canSend}) => {
 				</div>
 				<div className="promptbox-rightside-buttons">
 					<button className="promptbox-button-modelname">GPT-4o mini</button>
-					<button className="promptbox-button-send" disabled={prompt.trim() === "" || !canSend} onClick={handleClick}><FaArrowUp/></button>
+					{!canAbort && <button className="promptbox-button-send" disabled={prompt.trim() === "" || !canSend} onClick={handleSendClick}><FaArrowUp/></button>}
+					{canAbort && <button className="promptbox-button-abort" onClick={handleAbortClick}><FaSquare/></button>}
 				</div>
 			</div>
 		</div>
