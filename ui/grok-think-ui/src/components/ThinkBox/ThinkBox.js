@@ -3,6 +3,7 @@ import './ThinkBox.css';
 import { useResizeObserver } from '../../hooks/Resizer.js';
 import { useSmoothScrollBottom } from '../../hooks/Scroller.js';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import { HiOutlineLightBulb } from "react-icons/hi";
 
 // Response state constants
 const STATE_IDLE = "STATE_IDLE"
@@ -44,13 +45,13 @@ const ThinkBox = ({thought, thoughtFor, state}) => {
 		else setShowOngoingThought(false);
 	}, [expanded, state])
 
-	const bunchaSpace = <><br/><br/><br/><br/></>;
+	const bunchaSpace = <><br/><br/><br/></>;
 
 	return (
 		<div className="thinkbox-container">
 			<div className="thinkbox-box">
 				<div className="thinkbox-box-toprow" onClick={handleThinkBoxClick}>
-					<div className="thinkbox-timer"><span><b>{state === STATE_THINKING_STARTED ? "Thinking" : "Thought"} for</b> <span className="thought-seconds">{thoughtFor}s</span></span></div>
+					<div className="thinkbox-timer"><HiOutlineLightBulb/><span><b>{state === STATE_THINKING_STARTED ? "Thinking" : "Thought"} for</b> <span className="thought-seconds">{thoughtFor}s</span></span></div>
 					{expanded ? <div className="thinkbox-expand-collapse"><FaChevronUp /></div> : <div className="thinkbox-expand-collapse"><FaChevronDown /></div>}
 				</div>
 				<div className="thinkbox-box-midrow" onClick={handleThinkBoxClick}>

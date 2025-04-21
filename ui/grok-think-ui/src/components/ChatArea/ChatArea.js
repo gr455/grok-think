@@ -5,7 +5,8 @@ import UserMessage from '../UserMessage/UserMessage.js'
 import SystemMessage from '../SystemMessage/SystemMessage.js'
 import { useTimer } from '../../hooks/Timer.js'
 
-const KOMIK_SERVICE_ENDPOINT = "http://localhost:3000/chat"
+const KOMIK_SERVICE_HOST = process.env.REACT_APP_KOMIK_SERVICE_HOST;
+const KOMIK_SERVICE_ENDPOINT = `${KOMIK_SERVICE_HOST}/chat`
 
 // Response state constants
 const STATE_IDLE = "STATE_IDLE"
