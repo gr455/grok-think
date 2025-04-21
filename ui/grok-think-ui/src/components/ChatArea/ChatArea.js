@@ -55,6 +55,14 @@ const ChatArea = () => {
 					setResponseState(STATE_DONE);
 					return
 				}
+				else if (komikResponse.status == 429) {
+					setCurrentSystemResponse(prev => ({
+						...prev,
+						error: "Rate limited, please try again in a minute"
+					}));
+					setResponseState(STATE_DONE);
+					return
+				}
 				else if (komikResponse.status != 200) throw "Error ocurred"
 
 				setResponseState(STATE_THINKING_STARTED);

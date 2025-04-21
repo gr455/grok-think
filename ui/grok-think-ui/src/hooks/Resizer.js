@@ -2,13 +2,13 @@ import React, { useState, useEffect, useRef } from 'react'
 
 const useResizeObserver = (ref, callback, state) => {
 	useEffect(() => {
-		if (!ref) return;
+		if (!ref?.current) return;
 		const resizeObserver = new ResizeObserver(callback);
-		resizeObserver.observe(ref);
+		resizeObserver.observe(ref.current);
 
 		return () => {
-			if (!ref) return;
-			resizeObserver.unobserve(ref);
+			if (!ref?.current) return;
+			resizeObserver.unobserve(ref.current);
 		}
 	}, [state]);
 }
