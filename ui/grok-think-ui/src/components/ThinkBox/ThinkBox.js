@@ -63,7 +63,7 @@ const ThinkBox = ({thought, thoughtFor, state}) => {
 				</div>
 				<div className={`thinkbox-thought-ongoing-container-container ${showOngoingThought ? "visible" : "invisible"}`} style={{display: `${showOngoingThought ? "block" : "none"}`}}>
 					<div className={`thinkbox-thought-ongoing-container ${showOngoingThought ? "visible" : "invisible"}`} ref={ongoingThoughtBoxRef}>
-						<div className="thinkbox-thought-ongoing" ref={ongoingThoughtInnerRef}>{bunchaSpace}{thought}</div>
+						<div className="thinkbox-thought-ongoing" ref={ongoingThoughtInnerRef}>{bunchaSpace}<ReactMarkdown>{thought}</ReactMarkdown></div>
 					</div>
 				</div>
 				<div className="thinkbox-box-thought-container" style={{maxHeight: `${thoughtContainerHeight}px`}}>
