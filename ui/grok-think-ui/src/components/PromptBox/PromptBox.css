@@ -8,11 +8,12 @@
 
 .promptbox-input {
   width: auto;
-  padding: 14px 16px;
+  padding: 8px 12px;
   border: 0px;
   outline: none;
   background-color: #2D3033;
   color: #FCFCFC;
+  resize: none;
 }
 
 .promptbox-input::placeholder {

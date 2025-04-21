@@ -8,7 +8,8 @@ const PromptBox = ({handleSend, canSend}) => {
 
 	const handleEnter = (e) => {
 		if (!canSend) return;
-		if (e.key === "Enter" && prompt.trim() !== "") {
+		if (e.key === "Enter" && !e.shiftKey && prompt.trim() !== "") {
+			e.preventDefault();
 			handleSend(prompt.trim());
 			setPrompt("");
 		}
@@ -27,7 +28,7 @@ const PromptBox = ({handleSend, canSend}) => {
 
 	return (
 		<div className="promptbox-container">
-			<input type="text" className="promptbox-input" value={prompt} onChange={handleChange} onKeyDown={handleEnter} placeholder="How can Komik help?"></input>
+			<textarea type="text" className="promptbox-input" value={prompt} onChange={handleChange} onKeyDown={handleEnter} placeholder="How can Komik help?"></textarea>
 			<div className="promptbox-buttongroup">
 				<div className="promptbox-leftside-buttons">
 					<button className="promptbox-button-thinkmode" disabled={true}><HiLightBulb /> Think</button>

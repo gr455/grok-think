@@ -18,4 +18,9 @@
 
 body {
   background-color: #1F2123;
+  font-family: "Inter", sans-serif;
+}
+
+textarea {
+  font-family: "Inter", sans-serif;
 }
