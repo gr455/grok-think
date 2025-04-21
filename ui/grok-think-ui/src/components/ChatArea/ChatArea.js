@@ -148,7 +148,6 @@ const ChatArea = () => {
 			<div className="chat-area-messages-wrapper">
 				<div className="chat-area-messages">
 					{ makeMessageHistory(messageHistory, responseState) }
-					{ makeProcessingDots(responseState === STATE_USER_CREATED_REQUEST || responseState === STATE_THINKING_STARTED) }
 					{ makeCurrentSystemResponse(
 						currentSystemResponse.thought, 
 						currentSystemResponse.message,
@@ -163,14 +162,6 @@ const ChatArea = () => {
 				<PromptBox handleSend={handleSend} canSend={responseState === STATE_IDLE}/>
 				<div className="chat-area-foot">Komik never makes mistakes. It changes reality to match its answers</div>
 			</div>
-		</div>
-	)
-}
-
-const makeProcessingDots = (show) => {
-	if (!show) return null;
-	return (
-		<div className="chat-area-processing-dot">
 		</div>
 	)
 }

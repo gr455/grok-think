@@ -38,6 +38,7 @@
 }
 
 .promptbox-button-thinkmode {
+  display: flex;
   padding: 8px 12px;
   background-color: #414447;
   border: 0.5px solid #FCFCFC;
@@ -45,6 +46,12 @@
   border-radius: 999px;
   cursor: default;
   font-weight: 700;
+}
+
+.promptbox-button-thinkmode svg {
+  height: 15px;
+  width: auto;
+  margin-right: 5px;
 }
 
 .promptbox-button-modelname {

@@ -56,7 +56,7 @@ const ThinkBox = ({thought, thoughtFor, state}) => {
 				<div className="thinkbox-box-midrow" onClick={handleThinkBoxClick}>
 					<div className="thinkbox-expand-collapse-text">{expanded ? "Collapse details" : "Expand details"}</div>
 				</div>
-				<div className={`thinkbox-thought-ongoing-container ${showOngoingThought ? "visible" : "invisible"}`} ref={ongoingThoughtBoxRef} style={{display: `${showOngoingThought ? "inline-block" : "none"}`}}>
+				<div className={`thinkbox-thought-ongoing-container ${showOngoingThought ? "visible" : "invisible"}`} ref={ongoingThoughtBoxRef} style={{display: `${showOngoingThought ? "block" : "none"}`}}>
 					<div className="thinkbox-thought-ongoing" ref={ongoingThoughtInnerRef} >{bunchaSpace}{thought}</div>
 				</div>
 				<div className="thinkbox-box-thought-container" style={{maxHeight: `${thoughtContainerHeight}px`}}>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import './PromptBox.css'
 import { FaArrowUp } from 'react-icons/fa';
+import { HiLightBulb } from 'react-icons/hi';
 
 const PromptBox = ({handleSend, canSend}) => {
 	const [prompt, setPrompt] = useState("")
@@ -29,7 +30,7 @@ const PromptBox = ({handleSend, canSend}) => {
 			<input type="text" className="promptbox-input" value={prompt} onChange={handleChange} onKeyDown={handleEnter} placeholder="How can Komik help?"></input>
 			<div className="promptbox-buttongroup">
 				<div className="promptbox-leftside-buttons">
-					<button className="promptbox-button-thinkmode" disabled={true}>Think Mode <b>On</b></button>
+					<button className="promptbox-button-thinkmode" disabled={true}><HiLightBulb /> Think</button>
 				</div>
 				<div className="promptbox-rightside-buttons">
 					<button className="promptbox-button-modelname">GPT-4o mini</button>

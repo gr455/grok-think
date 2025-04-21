@@ -1,5 +1,4 @@
 .thinkbox-container {
-	width: 100%;
 }
 
 .thinkbox-box {
@@ -10,7 +9,6 @@
 	border-radius: 20px;
 	border-color: #323537;
 	padding: 15px 15px;
-	width: 100%;
 }
 
 .thought-seconds {
@@ -61,11 +59,7 @@
 	font-weight: 500;
 	opacity: 0.8;
 	height: 150px;
-	overflow: scroll;
-}
-
-.thinkbox-thought-ongoing::-webkit-scrollbar {
-	display: none;
+	overflow: hidden;
 }
 
 .thinkbox-thought-ongoing-container {
@@ -86,8 +80,8 @@
 	position: absolute;
 	left: 0;
 	right: 0;
-	height: 30px;
-
+	height: 40px;
+	z-index: 1;
 }
 
 .thinkbox-thought-ongoing-container::after {
@@ -95,15 +89,16 @@
 	position: absolute;
 	left: 0;
 	right: 0;
-	height: 30px;
+	height: 40px;
+	z-index: 1;
 }
 
 .thinkbox-thought-ongoing-container::before {
 	top: 0;
-	background: linear-gradient(to bottom, #1F2123, rgba(0, 0, 0, 0));
+	background: -webkit-linear-gradient(top, #1F2123, rgba(0, 0, 0, 0));
 }
 
 .thinkbox-thought-ongoing-container::after {
 	bottom: 0;
-	background: linear-gradient(to top, #1F2123, rgba(0, 0, 0, 0));
+	background: -webkit-linear-gradient(bottom, #1F2123, rgba(0, 0, 0, 0));
 }
