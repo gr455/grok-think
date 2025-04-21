@@ -8,6 +8,7 @@
 
 .logo-full {
   position: absolute;
+  cursor: pointer;
   left: 30px;
   top: 30px;
 }

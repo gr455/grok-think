@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm'
 import './SystemMessage.css'
 import ThinkBox from '../ThinkBox/ThinkBox.js'
 
@@ -17,7 +18,7 @@ const SystemMessage = ({thought, message, thoughtFor, error, state}) => {
 		<div className="system-message-container">
 			<div className="system-message">
 				<ThinkBox thought={thought} thoughtFor={thoughtFor} state={state} />
-				<div className="system-message-messagebox"><ReactMarkdown>{message}</ReactMarkdown></div>
+				<div className="system-message-messagebox"><ReactMarkdown remarkPlugins={[remarkGfm]}>{message}</ReactMarkdown></div>
 			</div>
 		</div>
 		)

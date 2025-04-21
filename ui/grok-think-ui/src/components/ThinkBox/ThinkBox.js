@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm'
 import './ThinkBox.css';
 import { useResizeObserver } from '../../hooks/Resizer.js';
 import { useSmoothScrollBottom } from '../../hooks/Scroller.js';
@@ -24,9 +26,10 @@ const ThinkBox = ({thought, thoughtFor, state}) => {
 
 	const handleContainerResize = () => {
 		if (expanded && thoughtBoxRef.current) {
+			const leeway = 10;
 			const computedStyle = window.getComputedStyle(thoughtBoxRef.current);
 			const totalMargins = parseFloat(computedStyle.marginTop) + parseFloat(computedStyle.marginBottom);
-			setThoughtContainerHeight(thoughtBoxRef.current.scrollHeight + totalMargins);
+			setThoughtContainerHeight(thoughtBoxRef.current.scrollHeight + totalMargins + leeway);
 		} else {
 			setThoughtContainerHeight(0);
 		}
@@ -46,6 +49,8 @@ const ThinkBox = ({thought, thoughtFor, state}) => {
 	}, [expanded, state])
 
 	const bunchaSpace = <><br/><br/><br/></>;
+	const testLorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat. Duis semper. Duis Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat. Duis semper. Duis Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat. Duis semper. Duis Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat. Duis semper. Duis Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat. Duis semper. Duis Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat. Duis semper. Duis Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat. Duis semper. Duis Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat. Duis semper. Duis"
+
 
 	return (
 		<div className="thinkbox-container">
@@ -58,10 +63,10 @@ const ThinkBox = ({thought, thoughtFor, state}) => {
 					<div className="thinkbox-expand-collapse-text">{expanded ? "Collapse details" : "Expand details"}</div>
 				</div>
 				<div className={`thinkbox-thought-ongoing-container ${showOngoingThought ? "visible" : "invisible"}`} ref={ongoingThoughtBoxRef} style={{display: `${showOngoingThought ? "block" : "none"}`}}>
-					<div className="thinkbox-thought-ongoing" ref={ongoingThoughtInnerRef} >{bunchaSpace}{thought}</div>
+					<div className="thinkbox-thought-ongoing" ref={ongoingThoughtInnerRef}>{bunchaSpace}{testLorem}{thought}</div>
 				</div>
 				<div className="thinkbox-box-thought-container" style={{maxHeight: `${thoughtContainerHeight}px`}}>
-					<div className="thinkbox-thought" ref={thoughtBoxRef}>{thought}</div>
+					<div className="thinkbox-thought" ref={thoughtBoxRef}><ReactMarkdown remarkPlugins={[remarkGfm]}>{thought}</ReactMarkdown></div>
 				</div>
 			</div>
 		</div>

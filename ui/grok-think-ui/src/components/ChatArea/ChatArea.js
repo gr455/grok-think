@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import './ChatArea.css'
 import PromptBox from '../PromptBox/PromptBox.js'
 import UserMessage from '../UserMessage/UserMessage.js'
 import SystemMessage from '../SystemMessage/SystemMessage.js'
 import { useTimer } from '../../hooks/Timer.js'
+import { useScrollTo } from '../../hooks/Scroller.js'
 
 const KOMIK_SERVICE_HOST = process.env.REACT_APP_KOMIK_SERVICE_HOST;
 const KOMIK_SERVICE_ENDPOINT = `${KOMIK_SERVICE_HOST}/chat`
@@ -23,7 +24,9 @@ const ChatArea = () => {
 		message: "",
 		error: ""
 	});
+	const newSystemMessageRef = useRef(null);
 	const lastRequestThinkingSeconds = useTimer(responseState);
+	useScrollTo(newSystemMessageRef, responseState);
 
 	const handleSend = (prompt) => {
 		const message = { role: "user", message: prompt }
@@ -84,7 +87,6 @@ const ChatArea = () => {
 					for (const chunk of chunks) {
 						const chunkData = JSON.parse(chunk.replace("data: ", ""));
 						if (chunkData.done) {
-							console.log("is done")
 							setResponseState(STATE_DONE);
 							break;
 						}
@@ -142,7 +144,7 @@ const ChatArea = () => {
 			});
 			setResponseState(STATE_IDLE)
 		}
-	}, [responseState])
+	}, [responseState]);
 
 	return (
 		<div className="chat-area-container">
@@ -154,7 +156,8 @@ const ChatArea = () => {
 						currentSystemResponse.message,
 						lastRequestThinkingSeconds,
 						currentSystemResponse.error,
-						responseState
+						responseState,
+						newSystemMessageRef
 					) }
 				</div>
 			</div>
@@ -177,9 +180,9 @@ const makeMessageHistory = (history) => {
 	})
 }
 
-const makeCurrentSystemResponse = (thought, message, thoughtFor, error, state) => {
+const makeCurrentSystemResponse = (thought, message, thoughtFor, error, state, ref) => {
 	if (!thought && !message && !error) return null;
-	return <SystemMessage key="new" thought={thought} message={message} thoughtFor={thoughtFor} err={error} state={state} />
+	return <SystemMessage key="new" ref={ref} thought={thought} message={message} thoughtFor={thoughtFor} err={error} state={state} />
 }
 
 export default ChatArea;
