@@ -40,30 +40,31 @@ const ThinkBox = ({thought, thoughtFor, state}) => {
 	}
 
 	useResizeObserver(thoughtBoxRef, handleContainerResize, expanded);
-	useSmoothScrollBottom(ongoingThoughtInnerRef, state);
+	useSmoothScrollBottom(ongoingThoughtBoxRef, state);
 
 	useEffect(() => {
-		console.log(state);
 		if (state === STATE_THINKING_STARTED && !expanded) setShowOngoingThought(true);
 		else setShowOngoingThought(false);
 	}, [expanded, state])
 
-	const bunchaSpace = <><br/><br/><br/></>;
-	const testLorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat. Duis semper. Duis Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat. Duis semper. Duis Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat. Duis semper. Duis Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat. Duis semper. Duis Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat. Duis semper. Duis Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat. Duis semper. Duis Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat. Duis semper. Duis Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat. Duis semper. Duis"
-
+	const bunchaSpace = <><br/><br/><br/><br/></>;
 
 	return (
 		<div className="thinkbox-container">
 			<div className="thinkbox-box">
-				<div className="thinkbox-box-toprow" onClick={handleThinkBoxClick}>
-					<div className="thinkbox-timer"><HiOutlineLightBulb/><span><b>{state === STATE_THINKING_STARTED ? "Thinking" : "Thought"} for</b> <span className="thought-seconds">{thoughtFor}s</span></span></div>
-					{expanded ? <div className="thinkbox-expand-collapse"><FaChevronUp /></div> : <div className="thinkbox-expand-collapse"><FaChevronDown /></div>}
+				<div className="thinkbox-row-container" onClick={handleThinkBoxClick}>
+					<div className="thinkbox-box-toprow">
+						<div className="thinkbox-timer"><HiOutlineLightBulb/><span><b>{state === STATE_THINKING_STARTED ? "Thinking" : "Thought"} for</b> <span className="thought-seconds">{thoughtFor}s</span></span></div>
+						{expanded ? <div className="thinkbox-expand-collapse"><FaChevronUp /></div> : <div className="thinkbox-expand-collapse"><FaChevronDown /></div>}
+					</div>
+					<div className="thinkbox-box-midrow">
+						<div className="thinkbox-expand-collapse-text">{expanded ? "Collapse details" : "Expand details"}</div>
+					</div>
 				</div>
-				<div className="thinkbox-box-midrow" onClick={handleThinkBoxClick}>
-					<div className="thinkbox-expand-collapse-text">{expanded ? "Collapse details" : "Expand details"}</div>
-				</div>
-				<div className={`thinkbox-thought-ongoing-container ${showOngoingThought ? "visible" : "invisible"}`} ref={ongoingThoughtBoxRef} style={{display: `${showOngoingThought ? "block" : "none"}`}}>
-					<div className="thinkbox-thought-ongoing" ref={ongoingThoughtInnerRef}>{bunchaSpace}{testLorem}{thought}</div>
+				<div className={`thinkbox-thought-ongoing-container-container ${showOngoingThought ? "visible" : "invisible"}`} style={{display: `${showOngoingThought ? "block" : "none"}`}}>
+					<div className={`thinkbox-thought-ongoing-container ${showOngoingThought ? "visible" : "invisible"}`} ref={ongoingThoughtBoxRef}>
+						<div className="thinkbox-thought-ongoing" ref={ongoingThoughtInnerRef}>{bunchaSpace}{thought}</div>
+					</div>
 				</div>
 				<div className="thinkbox-box-thought-container" style={{maxHeight: `${thoughtContainerHeight}px`}}>
 					<div className="thinkbox-thought" ref={thoughtBoxRef}><ReactMarkdown remarkPlugins={[remarkGfm]}>{thought}</ReactMarkdown></div>

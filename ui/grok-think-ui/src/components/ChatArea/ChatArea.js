@@ -24,15 +24,16 @@ const ChatArea = () => {
 		message: "",
 		error: ""
 	});
-	const newSystemMessageRef = useRef(null);
+	const chatAreaBottomRef = useRef(null);
 	const lastRequestThinkingSeconds = useTimer(responseState);
-	useScrollTo(newSystemMessageRef, responseState);
 
 	const handleSend = (prompt) => {
 		const message = { role: "user", message: prompt }
 		setMessageHistory(prev => [...prev, message]);
 		setResponseState(STATE_USER_CREATED_REQUEST);
 	}
+
+	useScrollTo(chatAreaBottomRef, responseState)
 
 	useEffect(() => {
 		const lastMessage = messageHistory[messageHistory.length - 1];
@@ -42,7 +43,6 @@ const ChatArea = () => {
 		(async () => {
 			const params = new URLSearchParams(window.location.search);
 			try {
-				setResponseState(STATE_THINKING_STARTED)
 				const komikResponse = await fetch(KOMIK_SERVICE_ENDPOINT, {
 					method: "POST",
 					headers: {
@@ -68,13 +68,12 @@ const ChatArea = () => {
 					return
 				}
 				else if (komikResponse.status != 200) throw "Error ocurred"
-
-				setResponseState(STATE_THINKING_STARTED);
 				
 				const reader = komikResponse.body.getReader();
 				const decoder = new TextDecoder();
 				let buffer = "";
 
+				setResponseState(STATE_THINKING_STARTED);
 				while (true) {
 					const { value, done } = await reader.read();
 					if (done) break;
@@ -151,17 +150,16 @@ const ChatArea = () => {
 			<div className="chat-area-messages-wrapper">
 				<div className="chat-area-messages">
 					{ makeMessageHistory(messageHistory, responseState) }
-					{ makeCurrentSystemResponse(
-						currentSystemResponse.thought, 
-						currentSystemResponse.message,
-						lastRequestThinkingSeconds,
-						currentSystemResponse.error,
-						responseState,
-						newSystemMessageRef
-					) }
+					{ ([STATE_THINKING_STARTED, STATE_RESPONSE_STARTED, STATE_DONE].includes(responseState) && makeCurrentSystemResponse(
+											currentSystemResponse.thought, 
+											currentSystemResponse.message,
+											lastRequestThinkingSeconds,
+											currentSystemResponse.error,
+											responseState,
+										)) || (responseState === STATE_USER_CREATED_REQUEST && processingDot())}
 				</div>
+				<div className="chat-area-bottom-ref" ref={chatAreaBottomRef}></div>
 			</div>
-
 			<div className="chat-area-bottom-wrapper">
 				<PromptBox handleSend={handleSend} canSend={responseState === STATE_IDLE}/>
 				<div className="chat-area-foot">Komik never makes mistakes. It changes reality to match its answers</div>
@@ -180,9 +178,13 @@ const makeMessageHistory = (history) => {
 	})
 }
 
-const makeCurrentSystemResponse = (thought, message, thoughtFor, error, state, ref) => {
+const makeCurrentSystemResponse = (thought, message, thoughtFor, error, state) => {
 	if (!thought && !message && !error) return null;
-	return <SystemMessage key="new" ref={ref} thought={thought} message={message} thoughtFor={thoughtFor} err={error} state={state} />
+	return <SystemMessage key="new" thought={thought} message={message} thoughtFor={thoughtFor} err={error} state={state} />
+}
+
+const processingDot = () => {
+	return <div className="chat-area-processing-dot"></div>
 }
 
 export default ChatArea;

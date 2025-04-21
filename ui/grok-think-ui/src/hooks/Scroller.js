@@ -32,13 +32,14 @@ const useSmoothScrollBottom = (ref, state) => {
 }
 
 const quickScroll = (scrollAt, targetAt) => {
-	return Math.ceil((targetAt - scrollAt)/scrollAt) * 2;
+	if (targetAt - scrollAt < 100) return 1;
+	if (scrollAt === 0) return 1;
+	return Math.min(Math.ceil((targetAt - scrollAt)/300), 4);
 }
 
 const useScrollTo = (ref, state) => {
 	useEffect(() => {
-		console.log("BRUH: ", state);
-		if (state === STATE_THINKING_STARTED && ref?.current) {
+		if (ref?.current) {
 			ref.current.scrollIntoView({ behaviour: "smooth" })
 		}
 	}, [state])
