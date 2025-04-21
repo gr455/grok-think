@@ -162,7 +162,7 @@ const ChatArea = () => {
 			</div>
 			<div className="chat-area-bottom-wrapper">
 				<PromptBox handleSend={handleSend} canSend={responseState === STATE_IDLE}/>
-				<div className="chat-area-foot">Komik never makes mistakes. It changes reality to match its answers</div>
+				<div className="chat-area-foot">Komik never makes mistakes. <span id="funny">It changes reality to match its answers</span></div>
 			</div>
 		</div>
 	)

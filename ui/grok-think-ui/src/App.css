@@ -16,6 +16,18 @@
   height: 60px;
 }
 
+.logo-small {
+  position: absolute;
+  cursor: pointer;
+  left: 30px;
+  top: 30px;
+  display: none;
+}
+
+.logo-small img{
+  height: 60px;
+}
+
 body {
   background-color: #1F2123;
   font-family: "Inter", sans-serif;
@@ -24,3 +36,24 @@ body {
 textarea {
   font-family: "Inter", sans-serif;
 }
+
+@media(max-width: 1150px) {
+  .logo-full {
+    display: none;
+  }
+
+  .logo-small {
+    display: block;
+  }
+}
+
+@media(max-width: 950px) {
+  .logo-full {
+    display: none;
+  }
+
+  .logo-small {
+    display: none;
+  }
+}
+

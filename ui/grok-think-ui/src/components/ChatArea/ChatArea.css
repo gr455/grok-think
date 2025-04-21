@@ -73,3 +73,16 @@
   border: 2px solid transparent;
   background-clip: content-box;
 }
+
+@media(max-width: 900px) {
+  .chat-area-messages-wrapper {
+    margin: 0px 10px;
+  }
+
+}
+
+@media(max-width: 500px) {
+	.chat-area-foot #funny {
+	  	display: none;
+	  }
+}
