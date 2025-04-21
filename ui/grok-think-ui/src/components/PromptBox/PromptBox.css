@@ -42,7 +42,7 @@
   display: flex;
   padding: 8px 12px;
   background-color: #414447;
-  border: 0.5px solid #FCFCFC;
+  border: 1px solid #FCFCFC;
   color: #FCFCFC;
   border-radius: 999px;
   cursor: default;
@@ -72,7 +72,8 @@
   font-size: 1rem;
   font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.2s ease
+  transition: background-color 0.2s ease;
+  text-align: center;
 }
 
 
