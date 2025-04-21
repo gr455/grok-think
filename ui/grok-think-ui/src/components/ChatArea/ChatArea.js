@@ -36,7 +36,7 @@ const ChatArea = () => {
 	}
 
 	const handleAbort = () => {
-		aborted.current= true;
+		aborted.current = true;
 	}
 
 	useScrollTo(chatAreaBottomRef, responseState)
