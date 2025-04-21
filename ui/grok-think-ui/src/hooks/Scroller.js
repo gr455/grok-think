@@ -18,10 +18,10 @@ const useSmoothScrollBottom = (ref, state) => {
 				if (!ref?.current) return;
 				console.log(ref.current.scrollTop)
 				ref.current.scrollTo({
-					top: Math.min(ref.current.scrollTop + 0.5, ref.current.scrollHeight),
+					top: Math.min(ref.current.scrollTop + 1, ref.current.scrollHeight),
 					behaviour: "smooth"
 				})
-			}, 10);
+			}, 20);
 		} else {
 			if (intervalRef.current) {
 				clearInterval(intervalRef.current);
